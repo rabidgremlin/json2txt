@@ -83,12 +83,22 @@ public class Processor
       for (int loop = 0; loop < paths.size(); loop++)
       {
         JPath jPath = JPath.parse(paths.get(loop));
-        Value val = jPath.evaluate(json);
+        Value[] values = jPath.evaluateAll(json);
 
-        // dump out the value if we got one
-        if (val != null)
+        // dump out the values if we got any
+        for (int valLoop = 0; valLoop < values.length; valLoop++)
         {
-          pout.write(val.getString());
+          if (values[valLoop] != null)
+          {
+            pout.write(values[valLoop].getString());
+          }
+
+          // not the last value ?
+          if (valLoop < values.length - 1)
+          {
+            // yep, add a tab seperator
+            pout.write("\t");
+          }
         }
 
         // not the last path ?

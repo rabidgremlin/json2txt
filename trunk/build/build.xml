@@ -1,0 +1,66 @@
+<project name="json2txt" default="release" basedir=".">
+
+    <tstamp>
+		<format property="build.time" pattern="yyyyMMddHHmmss"/>
+	</tstamp>
+
+    <target name="clean">
+        <delete dir="../classes"/>
+		<delete dir="../tmp"/>
+		<delete dir="../release"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="../classes"/>
+		
+		<path id="compile.classpath">
+			<fileset dir="../lib">
+				<include name="*.jar"/>
+			</fileset>			
+		</path>	
+		
+        <javac source="1.6" target="1.6" srcdir="../src" destdir="../classes" classpathref="compile.classpath" debug="on" debuglevel="lines,source"/>
+    </target>
+
+    <target name="jar">
+        <mkdir dir="../tmp/"/>
+		<mkdir dir="../tmp/jar/"/>
+		
+		<copy todir="../tmp/jar/">
+			<fileset dir="../classes">				
+				<include name="**/*.class"/>
+			</fileset>
+		</copy>
+				
+		<unjar src="../lib/jsonij-0.2.7.jar" dest="../tmp/jar/"/>
+		<unjar src="../lib/jcommander-1.13.jar" dest="../tmp/jar/"/>
+				
+        <jar destfile="../tmp/json2txt.jar" basedir="../tmp/jar/">
+            <manifest>
+                <attribute name="Main-Class" value="Json2Txt"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="release" depends="clean,compile,jar">
+	    <mkdir dir="../release"/>
+		<mkdir dir="../release/files"/>
+
+		<copy todir="../release/files/">
+			<fileset dir="../tmp/">				
+				<include name="json2txt.jar"/>
+			</fileset>
+			<fileset dir="../">				
+				<include name="LICENSE.txt"/>
+			</fileset>
+			<fileset dir="../">				
+				<include name="build/**/*.*"/>
+				<include name="src/**/*.*"/>
+				<include name="lib/**/*.*"/>
+			</fileset>
+		</copy>
+		
+		<zip destfile="../release/json2txt-${build.time}.zip" basedir="../release/files/"/>        
+    </target>
+
+</project>
