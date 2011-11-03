@@ -88,7 +88,7 @@ public class Processor
         // dump out the values if we got any
         for (int valLoop = 0; valLoop < values.length; valLoop++)
         {
-          if (values[valLoop] != null)
+          if (values[valLoop] != null && !values[valLoop].isNull())
           {
             pout.write(values[valLoop].getString());
           }
